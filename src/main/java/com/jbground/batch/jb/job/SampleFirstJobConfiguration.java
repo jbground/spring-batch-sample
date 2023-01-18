@@ -1,11 +1,11 @@
-package com.jbground.batch.job;
+package com.jbground.batch.jb.job;
 
 
-import com.jbground.batch.chunk.processor.JbgroundProcessor;
-import com.jbground.batch.chunk.reader.JbgroundReader;
-import com.jbground.batch.chunk.writer.JbgroundWriter;
+import com.jbground.batch.jb.chunk.processor.JbgroundProcessor;
+import com.jbground.batch.composite.CompositeSampleReader;
+import com.jbground.batch.composite.CompositeSampleWriter;
 import com.jbground.batch.config.InMemoryBatchConfigurer;
-import com.jbground.batch.listener.JbgroundChunkListener;
+import com.jbground.batch.jb.listener.JbgroundChunkListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -91,9 +91,9 @@ public class SampleFirstJobConfiguration {
 
         return stepBuilderFactory.get(String.valueOf(index))
                 .chunk(2)
-                .reader(new JbgroundReader<>())
+                .reader(new CompositeSampleReader<>())
                 .processor(new JbgroundProcessor<>())// 인풋타입의 아이템을 하나씩 반환
-                .writer(new JbgroundWriter<>())
+                .writer(new CompositeSampleWriter<>())
                 .faultTolerant()
                 .skipLimit(5)
                 .skip(Exception.class)

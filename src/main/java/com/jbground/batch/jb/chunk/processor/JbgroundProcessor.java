@@ -1,4 +1,4 @@
-package com.jbground.batch.chunk.processor;
+package com.jbground.batch.jb.chunk.processor;
 
 import org.springframework.batch.item.ItemProcessor;
 
