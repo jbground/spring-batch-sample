@@ -1,22 +1,17 @@
 package com.jbground.batch.job;
 
-import com.jbground.batch.model.Account;
-import com.jbground.batch.partitioner.CustomPartitioner;
-import com.jbground.batch.partitioner.PageIncreasePartitioner;
-import com.jbground.batch.tasklet.chunk.processor.AsyncAccountItemProcessor;
-import com.jbground.batch.tasklet.chunk.reader.PagingAccountItemReader;
-import com.jbground.batch.tasklet.chunk.writer.AsyncAccountItemWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.jbground.batch.partitioner.JbgroundPartitioner;
+import com.jbground.batch.tasklet.chunk.processor.UserProcessor;
+import com.jbground.batch.tasklet.chunk.reader.CreateUserReader;
+import com.jbground.batch.tasklet.chunk.writer.JbgroundWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.integration.async.AsyncItemProcessor;
-import org.springframework.batch.integration.async.AsyncItemWriter;
-import org.springframework.batch.item.database.AbstractPagingItemReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -24,13 +19,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 /**
  * Created by jsjeong on 2023. 01. 18.
  * <pre>
- * spring batch job 생성 예제
+ * spring batch 파티셔닝 방식 생성 예제
  * </pre>
  */
 @Configuration
 @EnableBatchProcessing
 public class PartitioningJobConfiguration {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
@@ -41,7 +35,7 @@ public class PartitioningJobConfiguration {
 
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setThreadNamePrefix("Async-Thread");
+        executor.setThreadNamePrefix("Part-Thread");
         executor.setMaxPoolSize(40);
         executor.setCorePoolSize(20);
         executor.setAllowCoreThreadTimeOut(true);
@@ -51,58 +45,41 @@ public class PartitioningJobConfiguration {
 
     @Bean
     public Job jbground() throws Exception {
-        return jobBuilderFactory.get("partitioning")
+        return jobBuilderFactory.get("partitioningJob")
                 .incrementer(new RunIdIncrementer())
                 .preventRestart() //중단 시 재시작 방지
-                .start(accountStep())
+                .start(partitionerStep())
                 .build();
     }
 
-    public Step partitionerStep(){
-        return stepBuilderFactory.get("collectPageIncreaseListStep")
-                .partitioner(collectStep().getName(), new PageIncreasePartitioner(urlRepository))
-                .step(collectStep())
-                .gridSize(4)
+    public Step partitionerStep() throws Exception {
+        return stepBuilderFactory.get("partitionerStep")
+                .partitioner("partitioner", new JbgroundPartitioner())
+                .step(slaveStep())
+                .gridSize(3)
                 .taskExecutor(threadPoolTaskExecutor())
                 .build();
     }
 
     @Bean
-    public Step accountStep() throws Exception {
-        return stepBuilderFactory.get("collectStep")
-                .<ArchiveProcessor, ArchiveRecode>chunk(1)
-                .reader(itemReader(null, null))  // 인풋타입의 아이템을 하나씩 반환
-                .processor(itemProcessor())                 // 인풋타입을 받아서 아웃풋타입으로 리턴
-                .writer(itemWriter())                       // 리스트방식으로 반환 chunkSize 일괄처리
-                .taskExecutor(threadPoolTaskExecutor())
+    public Step slaveStep() throws Exception {
+        return stepBuilderFactory.get("userStep")
+                .chunk(20)
+                .reader(reader(null))  // 인풋타입의 아이템을 하나씩 반환
+                .processor(processor(null))
+                .writer(new JbgroundWriter<>())
                 .build();
     }
 
-
     @Bean
-    public AbstractPagingItemReader reader() throws Exception {
-        PagingAccountItemReader<Account> reader = new PagingAccountItemReader<>();
-        reader.setPageSize(100);
-        reader.afterPropertiesSet();
-        return reader;
+    @StepScope
+    public CreateUserReader reader(@Value("#{stepExecutionContext['group']}") String group) throws Exception {
+        return new CreateUserReader<>(group);
     }
 
     @Bean
-    public AsyncItemProcessor processor() throws Exception {
-        AsyncItemProcessor<Account, Account> asyncItemProcessor = new AsyncItemProcessor<>();
-        asyncItemProcessor.setDelegate(new AsyncAccountItemProcessor<>());
-        asyncItemProcessor.setTaskExecutor(threadPoolTaskExecutor());
-        asyncItemProcessor.afterPropertiesSet();
-        return asyncItemProcessor;
+    @StepScope
+    public UserProcessor processor(@Value("#{stepExecutionContext['group']}") String group){
+        return new UserProcessor<>(group);
     }
-
-
-    @Bean
-    public AsyncItemWriter writer() throws Exception {
-        AsyncItemWriter<Account> asyncItemWriter = new AsyncItemWriter<>();
-        asyncItemWriter.setDelegate(new AsyncAccountItemWriter<>());
-        asyncItemWriter.afterPropertiesSet();
-        return asyncItemWriter;
-    }
-
 }

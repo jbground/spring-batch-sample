@@ -53,14 +53,13 @@ public class AsyncJobConfiguration {
 
     @Bean
     public Job jbground() throws Exception {
-        return jobBuilderFactory.get("partitioning")
+        return jobBuilderFactory.get("asyncJob")
                 .incrementer(new RunIdIncrementer())
                 .preventRestart() //중단 시 재시작 방지
                 .start(accountStep())
                 .build();
     }
 
-    @Bean
     public Step accountStep() throws Exception {
         return stepBuilderFactory.get("accountStep")
                 .chunk(10)
@@ -87,7 +86,6 @@ public class AsyncJobConfiguration {
 //    }
 
 
-    @Bean
     public AbstractPagingItemReader reader() throws Exception {
         PagingAccountItemReader<Account> reader = new PagingAccountItemReader<>();
         reader.setPageSize(100);
@@ -95,7 +93,6 @@ public class AsyncJobConfiguration {
         return reader;
     }
 
-    @Bean
     public AsyncItemProcessor processor() throws Exception {
         AsyncItemProcessor<Account, Account> asyncItemProcessor = new AsyncItemProcessor<>();
         asyncItemProcessor.setDelegate(new AsyncAccountItemProcessor<>());
@@ -105,7 +102,6 @@ public class AsyncJobConfiguration {
     }
 
 
-    @Bean
     public AsyncItemWriter writer() throws Exception {
         AsyncItemWriter<Account> asyncItemWriter = new AsyncItemWriter<>();
         asyncItemWriter.setDelegate(new AsyncAccountItemWriter<>());
