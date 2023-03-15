@@ -1,5 +1,6 @@
-package com.jbground.batch.composite;
+package com.jbground.batch.tasklet.chunk.reader;
 
+import com.jbground.batch.model.JbgroundNumber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.*;

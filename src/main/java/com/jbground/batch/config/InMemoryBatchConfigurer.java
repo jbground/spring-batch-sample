@@ -11,6 +11,7 @@ import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +22,7 @@ import javax.annotation.PostConstruct;
  * Spring Batch의 관리를 Database가 아닌 Memory에서 수행할 수 있도록 설정
  * </pre>
  */
+@Configuration
 public class InMemoryBatchConfigurer implements BatchConfigurer {
 
     private static final Logger logger = LoggerFactory.getLogger(InMemoryBatchConfigurer.class);

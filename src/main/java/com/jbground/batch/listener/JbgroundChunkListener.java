@@ -1,4 +1,4 @@
-package com.jbground.batch.jb.listener;
+package com.jbground.batch.listener;
 
 import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.scope.context.ChunkContext;

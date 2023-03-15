@@ -1,4 +1,4 @@
-package com.jbground.batch.composite;
+package com.jbground.batch.model;
 
 public class JbgroundNumber {
 

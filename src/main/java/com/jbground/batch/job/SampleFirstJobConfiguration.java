@@ -1,11 +1,11 @@
-package com.jbground.batch.jb.job;
+package com.jbground.batch.job;
 
 
-import com.jbground.batch.jb.chunk.processor.JbgroundProcessor;
-import com.jbground.batch.composite.CompositeSampleReader;
-import com.jbground.batch.composite.CompositeSampleWriter;
+import com.jbground.batch.tasklet.chunk.processor.JbgroundProcessor;
+import com.jbground.batch.tasklet.chunk.reader.CompositeSampleReader;
+import com.jbground.batch.tasklet.chunk.writer.CompositeSampleWriter;
 import com.jbground.batch.config.InMemoryBatchConfigurer;
-import com.jbground.batch.jb.listener.JbgroundChunkListener;
+import com.jbground.batch.listener.JbgroundChunkListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -42,10 +42,6 @@ public class SampleFirstJobConfiguration {
         this.stepBuilderFactory = stepBuilderFactory;
     }
 
-    @Bean
-    public BatchConfigurer batchConfigurer() {
-        return new InMemoryBatchConfigurer();
-    }
 
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -102,35 +98,5 @@ public class SampleFirstJobConfiguration {
                 .build();
     }
 
-//    public AsyncItemProcessor defaultProcessor(WebAddress webAddress) throws Exception {
-//        AsyncItemProcessor<Map<String, String>, ArchiveRecode> asyncItemProcessor = new AsyncItemProcessor<>();
-//        asyncItemProcessor.setDelegate(new DefaultArchiveProcessor<>(webAddress));
-//        asyncItemProcessor.setTaskExecutor(threadPoolTaskExecutor());
-//        asyncItemProcessor.afterPropertiesSet();
-//        return asyncItemProcessor;
-//    }
-
-//    public AsyncItemWriter defaultWriter() throws Exception {
-//        AsyncItemWriter<ArchiveRecode> asyncItemWriter = new AsyncItemWriter<>();
-//        asyncItemWriter.setDelegate(new DefaultArchiveWriter<>(archiveRepository));
-//        asyncItemWriter.afterPropertiesSet();
-//        return asyncItemWriter;
-//    }
-
-
-//    public Step uploadImageStep(int index) throws Exception {
-//        return stepBuilderFactory.get("uploadImageStep-" + index)
-//                .chunk(1)
-//                .reader(uploadImageReader(index))
-//                .processor(new UploadImageProcessor<>(uploadDirectory))// 인풋타입의 아이템을 하나씩 반환
-//                .writer(new UploadImageWriter<>(archiveRepository))
-//                .faultTolerant()
-//                .skip(FileNotFoundException.class)
-//                .skip(IOException.class)
-//                .skip(SocketException.class)
-//                .skipLimit(10000000)
-//                .taskExecutor(threadPoolTaskExecutor())// 리스트방식으로 반환 chunkSize 일괄처리
-//                .build();
-//    }
 
 }

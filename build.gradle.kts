@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-batch:2.7.2");
+    implementation("org.springframework.batch:spring-batch-integration:4.3.8");
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc:2.7.2");
 
 
