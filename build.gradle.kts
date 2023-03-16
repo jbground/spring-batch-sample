@@ -1,6 +1,12 @@
 plugins {
     id("java")
     id("idea")
+    id("org.springframework.boot") version "2.7.5"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
+}
+
+springBoot{
+    mainClass.value("com.jbground.batch.BatchApplication")
 }
 
 group = "com.jbground.batch"
@@ -25,4 +31,14 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.getByName("jar"){
+
+}
+
+tasks.getByName("bootJar"){
+    println("Spring batch + boot")
+    setProperty("archiveFileName", "jbground.jar")
+    version = "1.0.0"
 }

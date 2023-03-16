@@ -1,16 +1,18 @@
 package com.jbground.batch.job;
 
 
+import com.jbground.batch.listener.JbgroundChunkListener;
 import com.jbground.batch.tasklet.chunk.processor.JbgroundProcessor;
 import com.jbground.batch.tasklet.chunk.reader.CompositeSampleReader;
 import com.jbground.batch.tasklet.chunk.writer.CompositeSampleWriter;
-import com.jbground.batch.config.InMemoryBatchConfigurer;
-import com.jbground.batch.listener.JbgroundChunkListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.job.flow.support.SimpleFlow;
