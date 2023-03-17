@@ -2,6 +2,7 @@ package com.jbground.batch.model;
 
 import java.time.LocalDateTime;
 
+//EMP
 public class Employee {
 
     private int empNo;
