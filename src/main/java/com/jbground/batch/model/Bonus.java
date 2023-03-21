@@ -1,10 +1,25 @@
 package com.jbground.batch.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "BONUS")
 public class Bonus {
 
+    @Id
+    @Column(name = "ENAME")
     private String eName;
+
+    @Column(name = "JOB")
     private String job;
+
+    @Column(name = "SAL")
     private int sal;
+
+    @Column(name = "COMM")
     private int comm;
 
     public String geteName() {

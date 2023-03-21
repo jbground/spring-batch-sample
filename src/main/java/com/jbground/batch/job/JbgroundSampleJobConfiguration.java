@@ -26,7 +26,7 @@ import java.util.Arrays;
 /**
  * Created by jsjeong on 2023. 01. 18.
  * <pre>
- * spring batch job 생성 예제
+ * spring batch Job 생성 기본 예제
  * </pre>
  */
 @Configuration
@@ -42,8 +42,8 @@ public class JbgroundSampleJobConfiguration {
     }
 
     @Bean
-    public Job jbground() throws Exception {
-        return jobBuilderFactory.get("jbground")
+    public Job jbgroundJob() throws Exception {
+        return jobBuilderFactory.get("jbgroundJob")
                 .incrementer(new RunIdIncrementer())
                 .preventRestart() //중단 시 재시작 방지
 //                .start(chunkStep())

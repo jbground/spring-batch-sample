@@ -52,7 +52,7 @@ public class AsyncJobConfiguration {
     }
 
     @Bean
-    public Job jbground() throws Exception {
+    public Job asyncJob() throws Exception {
         return jobBuilderFactory.get("asyncJob")
                 .incrementer(new RunIdIncrementer())
                 .preventRestart() //중단 시 재시작 방지

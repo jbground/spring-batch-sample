@@ -22,11 +22,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 /**
  * Created by jsjeong on 2023. 01. 18.
  * <pre>
- * 비동기(Async)방식 실행 예제
- *
- * ItemReader 에선 1000개의 계좌를 chunk단위로 생성
- * ItemProcessor 청크단위의 계좌에서 부과세 공제 및 부과세 공제 여부 등록
- * ItemWriter 1000개의 계좌 출력
+ * String batch 멀티스레드 적용 예제
  * </pre>
  */
 @Configuration
@@ -52,7 +48,7 @@ public class MultiThreadJobConfiguration {
     }
 
     @Bean
-    public Job jbground() throws Exception {
+    public Job asyncJob() throws Exception {
         return jobBuilderFactory.get("asyncJob")
                 .incrementer(new RunIdIncrementer())
                 .preventRestart() //중단 시 재시작 방지

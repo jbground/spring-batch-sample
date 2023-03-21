@@ -1,9 +1,12 @@
 package com.jbground.batch.tasklet.chunk.reader;
 
+import com.jbground.batch.model.Employee;
 import org.springframework.batch.item.support.AbstractItemCountingItemStreamItemReader;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,7 +43,25 @@ public class CustomItemReader<T> extends AbstractItemCountingItemStreamItemReade
     }
 
     public void doReadPage() {
+        List<Employee> employees = new ArrayList<>();
 
+        if(page < 5){
+            Employee employee1 = new Employee();
+            employee1.setEmpNo(page);
+            employees.add(employee1);
+            Employee employee2 = new Employee();
+            employee1.setEmpNo(page);
+            employees.add(employee2);
+            Employee employee3 = new Employee();
+            employee1.setEmpNo(page);
+            employees.add(employee3);
+        }
+
+        if(employees.isEmpty()){
+            results = null;
+        }else{
+            results.addAll((Collection<? extends T>) employees);
+        }
     }
 
     @Override
