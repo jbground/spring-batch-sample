@@ -46,9 +46,9 @@ public class JbgroundSampleJobConfiguration {
         return jobBuilderFactory.get("jbgroundJob")
                 .incrementer(new RunIdIncrementer())
                 .preventRestart() //중단 시 재시작 방지
-//                .start(chunkStep())
+                .start(chunkStep())
 //                .next(compositeStep())
-                .start(taskletStep())
+//                .start(taskletStep())
                 .build();
     }
 
@@ -62,7 +62,7 @@ public class JbgroundSampleJobConfiguration {
     @Bean
     public Step chunkStep() throws Exception {
         return stepBuilderFactory.get("jbground-chunk")
-                .<JbgroundNumber, JbgroundNumber>chunk(100)
+                .<JbgroundNumber, JbgroundNumber>chunk(10)
                 .reader(new ChunkSampleReader<>())
                 .processor(new ChunkSampleProcessor<>())
                 .writer(new ChunkSampleWriter<>())

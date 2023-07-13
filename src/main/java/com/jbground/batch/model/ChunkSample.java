@@ -11,4 +11,12 @@ public class ChunkSample {
     public void setVal(int val) {
         this.val = val;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("ChunkSample{");
+        sb.append("val=").append(val);
+        sb.append('}');
+        return sb.toString();
+    }
 }

@@ -23,9 +23,9 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:/datasource.properties"})
-public class HibernateConfiguration {
+public class JPAConfiguration {
 
-    private final Logger logger = LoggerFactory.getLogger(HibernateConfiguration.class);
+    private final Logger logger = LoggerFactory.getLogger(JPAConfiguration.class);
 
     @Resource(name = "hikari_oracle")
     private DataSource hikari_oracle;

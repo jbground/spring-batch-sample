@@ -13,10 +13,15 @@ public class ChunkSampleReader<T> implements ItemReader<T> {
     @Override
     public T read() {
 
-        if(count++ <= 200)
-            return (T) new ChunkSample();
-        else
+        if(count++ <= 200){
+            ChunkSample chunkSample = new ChunkSample();
+            chunkSample.setVal(count);
+            logger.info("create chunkSample : {}", chunkSample);
+            return (T) chunkSample;
+
+        } else{
             return null;
 
+        }
     }
 }
